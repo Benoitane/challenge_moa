@@ -10,7 +10,7 @@ def train_over_targets(features,targets,model,naive,list_pos_rate):
     for i in range(targets.shape[1]):
         if list_pos_rate[i] >= 0.01:
             model.fit(features, targets[:,i])
-            Y_pred = clf.predict(features)
+            Y_pred = model.predict(features)
             models_loss.append(log_loss(targets[:,i], Y_pred))
         if list_pos_rate[i] < 0.01:
             naive.fit(features, targets[:,i])
