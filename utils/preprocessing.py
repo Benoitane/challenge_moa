@@ -2,7 +2,25 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
+import seaborn as sns
 
+
+def plot_corr_targets(data):
+    f, ax = plt.subplots(figsize=(10, 8))
+    corr = data.drop('sig_id',1).corr()
+    sns.heatmap(corr, mask=np.zeros_like(corr, dtype=np.bool), cmap=sns.diverging_palette(220, 10, as_cmap=True),
+                square=True, ax=ax)
+
+
+def plot_corr_mat_features(data,feature_group,var,cat):
+    if var != None:
+        data = data[data[var] == cat]
+    c_cols = [col for col in data.columns if feature_group in col]
+    df_cells = data[c_cols]
+    f, ax = plt.subplots(figsize=(10, 8))
+    corr = df_cells.corr()
+    sns.heatmap(corr, mask=np.zeros_like(corr, dtype=np.bool),
+            cmap=sns.diverging_palette(220, 10, as_cmap=True),square=True, ax=ax)
 
 def plot_bar(df,var):
     labs = df[var].value_counts()
