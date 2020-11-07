@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
 
 
 def plot_bar(df,var):
@@ -37,3 +38,11 @@ def prepro_Y(data):
     Yt = data.copy()
     del Yt['sig_id']
     return Yt.to_numpy()
+
+def split_and_select_target(features,targets,i):
+    if type(i) == int:
+        target = targets[:,i]
+        x_train, x_val, y_train, y_val = train_test_split(features, target, test_size=0.33, random_state=2020)
+    else:
+        x_train, x_val, y_train, y_val = train_test_split(features, targets, test_size=0.33, random_state=2020)
+    return x_train, x_val, y_train, y_val
