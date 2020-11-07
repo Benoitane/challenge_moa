@@ -46,3 +46,8 @@ def split_and_select_target(features,targets,i):
     else:
         x_train, x_val, y_train, y_val = train_test_split(features, targets, test_size=0.33, random_state=2020)
     return x_train, x_val, y_train, y_val
+
+
+def def_positive_rate_per_col(data):
+    temp = data.apply(pd.value_counts).iloc[:2].drop(['sig_id'], axis=1).reset_index(drop = True)
+    return dict((temp.T[1] / (temp.T[0] + temp.T[1])).T)
