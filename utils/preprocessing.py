@@ -10,10 +10,30 @@ def plot_bar(df,var):
     ax.set_ylabel("Nombre")
     plt.show()
 
+def multi_var_bar(df,var1,var2):
+    group_counts = df.groupby([var1, var2]).sig_id.count().reset_index()
+    table = pd.pivot_table(group_counts, index=var1, columns=var2, values='sig_id')
+    table.plot(kind='barh', color=['r', 'g', 'b'])
+
 def var_density(data,var,group):
     data.groupby(group)[var].plot(kind='kde',alpha=0.7,legend=True)
 
 def plot_most_pos_target(data,n):
-    temp = data.apply(pd.value_counts).iloc[:2].drop(['sig_id'], axis=1).reset_index()
-    temp2 = temp.sort_values(temp.last_valid_index(), axis=1).iloc[1,-n:]
-    temp2.plot(kind='bar')
+    temp = data.apply(pd.value_counts).iloc[:2].drop(['sig_id'], axis=1).reset_index(drop = True)
+    temp2 = temp.sort_values(temp.last_valid_index(), axis=1)
+    ordered_cols = temp2.columns
+    temp2.iloc[1,-n:].plot(kind='bar')
+    return list(ordered_cols)[::-1]
+
+def prepro_X(data1,data2):
+    Xt = pd.merge(data1,data2, on='sig_id')
+    list_col_to_conv = ['cp_type','cp_dose','cp_time','drug_id']
+    for col in list_col_to_conv:
+        Xt[col] = pd.Categorical(Xt[col]).codes
+    del Xt['sig_id']
+    return Xt.to_numpy()
+
+def prepro_Y(data):
+    Yt = data.copy()
+    del Yt['sig_id']
+    return Yt.to_numpy()
